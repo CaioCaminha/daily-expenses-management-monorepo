@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.caminha.javadailyexpenses'
+version = '0.0.1-SNAPSHOT'
+description = 'postgres-utils'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+dependencies {
+    // PostgreSQL Dependencies
+    implementation 'org.springframework.data:spring-data-r2dbc'
+    implementation 'org.postgresql:postgresql'
+    implementation 'org.postgresql:r2dbc-postgresql'
+    implementation 'io.r2dbc:r2dbc-pool'
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
