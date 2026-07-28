@@ -1,4 +1,4 @@
-package com.caminha.javadailyexpenses.postgresutils.utils;
+package com.caminha.postgresutils.utils;
 
 import lombok.Data;
 //import org.springframework.data.annotation.Version;

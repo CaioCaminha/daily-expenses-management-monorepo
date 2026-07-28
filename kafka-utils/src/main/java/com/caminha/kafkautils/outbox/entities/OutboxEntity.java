@@ -1,4 +1,4 @@
-package com.caminha.javadailyexpenses.kafkautils.outbox.entities;
+package com.caminha.kafkautils.outbox.entities;
 
 
 import org.jspecify.annotations.Nullable;
