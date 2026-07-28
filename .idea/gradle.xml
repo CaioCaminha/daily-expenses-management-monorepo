@@ -21,7 +21,6 @@
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/daily-expenses-management-conventions" />
             <option value="$PROJECT_DIR$/expenses-manager" />
-            <option value="$PROJECT_DIR$/java-daily-expenses-management" />
             <option value="$PROJECT_DIR$/kafka-utils" />
             <option value="$PROJECT_DIR$/postgres-utils" />
           </set>

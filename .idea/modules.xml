@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/java-daily-expenses-management/daily-expenses-management.java-daily-expenses-management.main.iml" filepath="$PROJECT_DIR$/.idea/modules/java-daily-expenses-management/daily-expenses-management.java-daily-expenses-management.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/postgres-utils/daily-expenses-management.postgres-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/postgres-utils/daily-expenses-management.postgres-utils.main.iml" />
     </modules>
   </component>
