@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: /db/changelog/../scripts/20251106-create-base-tables.sql
+      relativeToChangelogFile: false

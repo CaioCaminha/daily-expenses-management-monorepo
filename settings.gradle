@@ -9,6 +9,9 @@ rootProject.name = 'daily-expenses-management'
 
 
 include('java-daily-expenses-management')
+include('expenses-manager')
 include 'daily-expenses-management-conventions'
 include 'kafka-utils'
 include 'postgres-utils'
+
+include 'expenses-manager'

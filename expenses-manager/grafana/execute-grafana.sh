@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker run -d -p 3000:3000 --name=grafana   --user "$(id -u)"   --volume "$PWD/grafana-volume:/var/lib/grafana"   grafana/grafana

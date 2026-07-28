@@ -1,0 +1,5 @@
+rootProject.name = 'expenses-manager'
+
+//include(
+//        ':postgres-utils'
+//)

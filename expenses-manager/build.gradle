@@ -1,0 +1,74 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.caiocaminha'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.data:spring-data-r2dbc'
+	implementation 'org.postgresql:postgresql'
+	implementation 'org.postgresql:r2dbc-postgresql'
+	implementation 'io.r2dbc:r2dbc-pool'
+
+
+	compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+	//OBSERVABILITY DEPENDENCIES
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0'
+
+    implementation 'tools.jackson.dataformat:jackson-dataformat-csv:3.0.0'
+
+//	implementation ':postgres-utils'
+
+	implementation project(':postgres-utils')
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.liquibase:liquibase-core:5.0.1'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-aop
+//    implementation 'org.springframework:spring-aop:7.0.0-RC1'
+
+
+    // This automatically enables AOP on the project
+    // No need to use @EnableAspectJAutoProxy anymore
+    implementation 'org.springframework.boot:spring-boot-starter-aop:3.5.6'
+
+// 	Undertow Dependencies
+// 	implementation 'io.undertow:undertow-core:2.3.19.Final'
+
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+
+	// CSV Parser
+	implementation 'com.univocity:univocity-parsers:2.8.4'
+
+	//Kafka dependencies
+	implementation 'org.springframework.kafka:spring-kafka'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
