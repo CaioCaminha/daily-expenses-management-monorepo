@@ -1,7 +1,7 @@
 package com.caiocaminha.expensesmanager.core.application.gateway.controller.transaction;
 
 import com.caiocaminha.expensesmanager.core.application.gateway.controller.transaction.dto.TransactionDetailsDto;
-import com.caiocaminha.expensesmanager.core.application.utils.CustomTransactional;
+import com.caminha.postgresutils.utils.utils.transactional.CustomTransactional;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.Category;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.TransactionDetails;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.TransactionDetailsPort;
@@ -100,6 +100,7 @@ public class TransactionHandler {
                 );
     }
 
+    @CustomTransactional
     public Mono<ServerResponse> createTransaction(ServerRequest request) {
         return request.bodyToMono(TransactionDetails.class)
                 .flatMap(transactionDetailsPort::upsert)

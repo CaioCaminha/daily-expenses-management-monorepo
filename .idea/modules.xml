@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expenses-manager/daily-expenses-management.expenses-manager.main.iml" filepath="$PROJECT_DIR$/.idea/modules/expenses-manager/daily-expenses-management.expenses-manager.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-utils/daily-expenses-management.kafka-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-utils/daily-expenses-management.kafka-utils.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/postgres-utils/daily-expenses-management.postgres-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/postgres-utils/daily-expenses-management.postgres-utils.main.iml" />
     </modules>
   </component>

@@ -24,7 +24,6 @@ public class TestKafkaProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
     public void sendMessages() {
         var message = new Message() {
             @Override
@@ -48,11 +47,11 @@ public class TestKafkaProducer {
         kafkaTemplate.send("topic1", "test", "testing message publishing");
 
         log.info("sending message via Message abstraction");
-//        kafkaTemplate.send(message).whenComplete(
-//                (result, ex) -> {
-//                    log.info("sent successfully {}", result);
-//                }
-//        );
+        kafkaTemplate.send(message).whenComplete(
+                (result, ex) -> {
+                    log.info("sent successfully {}", result);
+                }
+        );
     }
 
 

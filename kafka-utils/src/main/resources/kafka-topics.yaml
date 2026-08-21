@@ -1,0 +1,15 @@
+kafka:
+  topics:
+    definitions:
+      expenses-management-updates:
+        name: expenses-management-updates
+        partitions: 1
+        replicas: 1
+      expenses-management-analytics-updates:
+        name: expenses-management-to-analytics-updates
+        partitions: 1
+        replicas: 1
+      analytics-internal-updates:
+        name: analytics-internal-updates
+        partitions: 1
+        replicas: 1

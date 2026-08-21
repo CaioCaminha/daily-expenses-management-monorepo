@@ -14,3 +14,6 @@ include 'kafka-utils'
 include 'postgres-utils'
 
 include 'expenses-manager'
+include 'json-utils'
+include 'kafka-outbox'
+include 'outbox-trigger'

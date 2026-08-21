@@ -23,10 +23,6 @@ dependencies {
 	implementation 'org.postgresql:r2dbc-postgresql'
 	implementation 'io.r2dbc:r2dbc-pool'
 
-
-	compileOnly 'org.projectlombok:lombok:1.18.30'
-	annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
 	//OBSERVABILITY DEPENDENCIES
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
@@ -39,6 +35,7 @@ dependencies {
 //	implementation ':postgres-utils'
 
 	implementation project(':postgres-utils')
+	implementation project(':kafka-utils')
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
@@ -64,8 +61,6 @@ dependencies {
 	// CSV Parser
 	implementation 'com.univocity:univocity-parsers:2.8.4'
 
-	//Kafka dependencies
-	implementation 'org.springframework.kafka:spring-kafka'
 
 }
 

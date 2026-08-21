@@ -1,22 +1,22 @@
 # Postgres docker-compose.yml file from docker hub examples
 
 services:
-  java-daily-expenses:
-    image: java-daily-expenses:11
-    container_name: java-daily-expenses
-    ports:
-      - "8089:8089"
-    environment:
-      DB_SERVER_HOST: postgres
-      DB_SERVER_PORT: 5432
-    deploy:
-      resources:
-        limits:
-          cpus: "1.0"
-          memory: 512M
-        reservations:
-          cpus: "0.5"
-          memory: 256M
+#  java-daily-expenses:
+#    image: java-daily-expenses:11
+#    container_name: java-daily-expenses
+#    ports:
+#      - "8089:8089"
+#    environment:
+#      DB_SERVER_HOST: postgres
+#      DB_SERVER_PORT: 5432
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "1.0"
+#          memory: 512M
+#        reservations:
+#          cpus: "0.5"
+#          memory: 256M
   db:
     image: postgres
     container_name: postgres
@@ -41,7 +41,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - /home/caio-caminha/Documents/projects/java-daily-expenses-management/grafana/grafana-volume:/var/lib/grafana
+      - /home/caio-caminha/Documents/projects/daily-expenses-management/expenses-manager/grafana/grafana-volume:/var/lib/grafana
   prometheus:
     image: prom/prometheus
     container_name: prometheus-java-daily-expenses
@@ -49,4 +49,4 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - /home/caio-caminha/Documents/projects/java-daily-expenses-management/prometheus-testing/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /home/caio-caminha/Documents/projects/daily-expenses-management/expenses-manager/prometheus-testing/prometheus.yml:/etc/prometheus/prometheus.yml
