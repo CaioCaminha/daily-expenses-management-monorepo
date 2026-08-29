@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 public class OutboxTriggerConsumer {
 
     private final KafkaPublisher kafkaPublisher;
-    private final ObjectMapper objectMapper;
     private final OutboxPersistenceProvider outboxPersistenceProvider;
 
     @Value("${kafka.outbox.internal.topic}")
@@ -26,20 +25,13 @@ public class OutboxTriggerConsumer {
             OutboxPersistenceProvider outboxPersistenceProvider
     ) {
         this.kafkaPublisher = kafkaPublisher;
-        this.objectMapper = objectMapper;
         this.outboxPersistenceProvider = outboxPersistenceProvider;
     }
 
     @KafkaListener(topics = "${outbox.trigger.topic}")
     public void triggerOutbox() throws JsonProcessingException {
 
-        //todo caio - this event is just to trigger the logic that processes outbox logic
-        // retrieve all orderingKeys that have unpublished messages
-        // trigger internal event only containing orderingKey
-        // another consumer must consume this internal event
-        // retrieve unpublished messages for that orderingKey and publish them to the broker
-        // this way multiple pods, or internal threads / virtual threads can publish events for different
-        // orderingKeys, allowing parallel consumption.
+        //todo caio - this needs to try to lock given ordering key before calling kafkaPublisher
 
         outboxPersistenceProvider.findOrderingKeysForUnpublishedMessages().doOnNext( orderingKey ->
                 kafkaPublisher.publishMessage(

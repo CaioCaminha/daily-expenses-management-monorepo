@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 @EnableConfigurationProperties(
         {
                 KafkaTopicsProperties.class,
-                JsonUtilsConfiguration.class
         }
 )
 @ComponentScan

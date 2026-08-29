@@ -34,6 +34,16 @@ services:
     restart: always
     ports:
       - 9092:9092
+  redis:
+    image: redis:alpine
+    container_name: expenses-manager-redis
+    command: redis-server --requirepass expenses-manager-pass
+    environment:
+      - REDIS_ARGS="--appendonly yes"
+    volumes:
+      - /home/caio-caminha/Documents/projects/daily-expenses-management/redis-utils/docker/volume/data:/data
+    ports:
+      - "6379:6379"
   grafana:
     image: grafana/grafana
     container_name: grafana

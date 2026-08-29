@@ -12,4 +12,8 @@ public interface OutboxPersistenceProvider {
 
     Mono<Void> markAsSent(String id);
 
+    //todo save method should receive an object as the message payload, orderId provider, topicName
+    // could resolve topicName by type based on properties
+    Mono<Void> save()
+
 }

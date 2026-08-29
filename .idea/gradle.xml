@@ -27,6 +27,7 @@
             <option value="$PROJECT_DIR$/kafka-utils" />
             <option value="$PROJECT_DIR$/outbox-trigger" />
             <option value="$PROJECT_DIR$/postgres-utils" />
+            <option value="$PROJECT_DIR$/redis-utils" />
           </set>
         </option>
       </GradleProjectSettings>
