@@ -51,6 +51,8 @@ public class KafkaConfig {
 
     @Bean
     public Set<NewTopic> kafkaTopics() {
+        //todo this is not working as expected
+        // not sure if it's required to create topics beforehand - seems like broker handles it
         return this.kafkaTopicsProperties.getAllTopics().stream().map(topic ->
                 TopicBuilder
                         .name(topic.name())
@@ -66,10 +68,13 @@ public class KafkaConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "localhost:9092");
+                "localhost:9094");
         props.put(
                 ConsumerConfig.GROUP_ID_CONFIG,
                 "groupId");
+        props.put(
+                ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG,
+                "3000");
         props.put(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 StringDeserializer.class);
@@ -84,7 +89,7 @@ public class KafkaConfig {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "localhost:9092");
+                "localhost:9094");
         configProps.put(
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
@@ -105,7 +110,7 @@ public class KafkaConfig {
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9094");
         return new KafkaAdmin(configs);
     }
 
@@ -126,10 +131,10 @@ public class KafkaConfig {
     }
 
 
-//    @Bean
-//    public KafkaConsumerTest consumer() {
-//        return new KafkaConsumerTest();
-//    }
+    @Bean
+    public KafkaConsumerTest consumer() {
+        return new KafkaConsumerTest();
+    }
 
 
     @EventListener(ContextClosedEvent.class)

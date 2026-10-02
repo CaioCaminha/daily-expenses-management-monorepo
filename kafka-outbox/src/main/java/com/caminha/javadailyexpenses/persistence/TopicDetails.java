@@ -1,4 +1,9 @@
 package com.caminha.javadailyexpenses.persistence;
 
-public record TopicDetails() {
+import java.util.List;
+
+public record TopicDetails(
+        String name,
+        List<String> supportedTypes
+) {
 }

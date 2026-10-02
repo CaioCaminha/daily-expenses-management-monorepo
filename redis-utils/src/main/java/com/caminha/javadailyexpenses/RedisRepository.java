@@ -52,16 +52,14 @@ public class RedisRepository <K, V> {
     public Mono<Boolean> safeDelete(
             K key
     ){
+        SimpleRedisKey<K> simpleRedisKey = buildSimpleRedisKey(key);
         return redisTemplate.execute(
                 RedisScript.of(UNLOCK_SCRIPT, Long.class),
-                List.of(buildSimpleRedisKey(key))
+                List.of(simpleRedisKey)
         ).count().map(count -> count > 0).doOnError(error ->
                 log.error("Not possible to safe delete for key: {}", key, error)
         );
     }
-
-
-
 
 
     private SimpleRedisKey<K> buildSimpleRedisKey(

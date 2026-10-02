@@ -1,6 +1,8 @@
 package com.caminha.javadailyexpenses.persistence;
 
 import com.caminha.javadailyexpenses.consumer.OutboxEvent;
+import com.caminha.kafkautils.publisher.OutboxBaseClass;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -12,8 +14,9 @@ public interface OutboxPersistenceProvider {
 
     Mono<Void> markAsSent(String id);
 
-    //todo save method should receive an object as the message payload, orderId provider, topicName
-    // could resolve topicName by type based on properties
-    Mono<Void> save()
+    <T extends OutboxBaseClass> Mono<OutboxEvent> save(
+            T payload,
+            OrderingKeyExtractor<T> orderingKeyExtractor
+    ) throws JsonProcessingException;
 
 }

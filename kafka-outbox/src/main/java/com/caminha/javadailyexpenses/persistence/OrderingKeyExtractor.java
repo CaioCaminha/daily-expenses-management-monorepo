@@ -1,4 +1,6 @@
 package com.caminha.javadailyexpenses.persistence;
 
-public interface OrderingKeyExtractor {
+@FunctionalInterface
+public interface OrderingKeyExtractor<T> {
+    String extract(T payload);
 }

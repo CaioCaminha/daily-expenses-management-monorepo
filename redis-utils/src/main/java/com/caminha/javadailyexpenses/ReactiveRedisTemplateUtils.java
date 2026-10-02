@@ -18,7 +18,7 @@ public class ReactiveRedisTemplateUtils {
 
         Jackson2JsonRedisSerializer<V> valueSerializer = new Jackson2JsonRedisSerializer<>(
                 objectMapper,
-                objectMapper.getTypeFactory().constructArrayType(valueClass)
+                valueClass
         );
 
         RedisSerializationContext.RedisSerializationContextBuilder<SimpleRedisKey<K>, V> context =

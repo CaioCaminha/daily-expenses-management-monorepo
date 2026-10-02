@@ -20,12 +20,10 @@ public abstract class PersistableEntity<T> implements Serializable, Persistable<
     public LocalDateTime createdAt = LocalDateTime.now();
     @Column("updated_at")
     public LocalDateTime updatedAt = createdAt;
-    @Version
-    public Integer version = 0;
 
     @Override
     public boolean isNew(){
-        return createdAt == updatedAt && version == 0;
+        return createdAt == updatedAt;
     }
 
     public void updated() {

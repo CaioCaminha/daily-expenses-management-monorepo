@@ -1,36 +1,39 @@
 package com.caminha.javadailyexpenses;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.ReactiveRedisConnection;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnection;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 @Configuration
+@ComponentScan
+@Slf4j
 public class RedisConfiguration {
 
-    @Value("{redis.config.host_name}")
+    @Value("${redis.host}")
     public String redisHost;
 
-    @Value("{redis.config.port}")
-    public Integer redisPort;
+    @Value("${redis.port}")
+    public String redisPort;
 
-    @Value("{redis.config.password}")
+    @Value("${redis.password}")
     public String redisPassword;
 
 
     @Bean
+    @Primary
     // TODO future - Evaluate SSL LettuceConnectionFactory for redis connections - depending on deployment
     public ReactiveRedisConnectionFactory reactiveRedisConnectionFactory() {
+        log.info("redis port: {}", redisPort);
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(redisHost);
-        configuration.setPort(redisPort);
+        configuration.setPort(Integer.parseInt(redisPort));
         configuration.setPassword(RedisPassword.of(redisPassword));
 
         LettuceConnectionFactory factory = new LettuceConnectionFactory(configuration);

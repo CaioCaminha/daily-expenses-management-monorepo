@@ -2,3 +2,9 @@ databaseChangeLog:
   - include:
       file: /db/changelog/../scripts/20251106-create-base-tables.sql
       relativeToChangelogFile: false
+  - include:
+      file: /db/changelog/../scripts/20260909-create-outbox-table.sql
+      relativeToChangelogFile: false
+  - include:
+      file: /db/changelog/../scripts/20260909-update-outbox-table-add-ordering-key.sql
+      relativeToChangelogFile: false

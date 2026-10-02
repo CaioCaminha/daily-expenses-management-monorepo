@@ -1,4 +1,9 @@
 package com.caiocaminha.expensesmanager.core.application.gateway.r2dbc;
 
-public record OutboxTestDto() {
+import com.caminha.kafkautils.publisher.OutboxBaseClass;
+
+public record OutboxTestDto(
+        @Override String type,
+        String data
+) implements OutboxBaseClass {
 }

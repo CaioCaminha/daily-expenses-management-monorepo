@@ -156,8 +156,11 @@ public class TransactionHandler {
                                     Flux<DataBuffer> contents = partEvents.map(PartEvent::content);
 
                                     return streamParseCSV(contents)
-                                            .buffer(500) //todo check if this is a proper value for buffering
+                                            .buffer(100) //todo check if this is a proper value for buffering
                                             .flatMap( transactions ->
+                                                    //todo caio - This logic will be updated to publish CREATE_TRANSACTION instead of calling transactionDetails port
+                                                    // it should instead, call a usecase that would save CREATE_TRANSACTION to outbox table and then the consumer would be responsible
+                                                    // for saving on transaction_details table and other operations
                                                     Flux.fromStream(transactions.stream().map(transactionDetailsPort::upsert))
                                             ).flatMap(Function.identity());
                                 }
@@ -210,12 +213,10 @@ public class TransactionHandler {
 
 
                    //TODO first lines of statement has some additional information - check how to workaround this
+                   //   check how to define how many lines to skip dinamically - config property by financial institution
                    while(iterator.hasNext() && !sink.isCancelled()) {
                        Record record = iterator.next();
                        try {
-                           System.out.println("caio - start from here");
-//                           System.out.println(record);
-                           System.out.println(record.toIndexMap());
                            var transactionDetailsDto = TransactionDetailsDto.of(
                                    record.getString(DESCRIPTION_INDEX),
                                    record.getString(HISTORY_INDEX),
@@ -224,7 +225,13 @@ public class TransactionHandler {
                                    record.getString(BALANCE_INDEX)
                            );
 
-                           log.info("building new transactionDetailsDto from CSV description: %s | cost: %s | transactionDate: %s".formatted(transactionDetailsDto.getDescription(), transactionDetailsDto.getCost(), transactionDetailsDto.getTransactionDate()));
+                           log.info(
+                                   "building new transactionDetailsDto from CSV description: {} | cost: {} | transactionDate: {}",
+                                   transactionDetailsDto.getDescription(),
+                                   transactionDetailsDto.getCost(),
+                                   transactionDetailsDto.getTransactionDate()
+                           );
+
                            sink.next(
                                    new TransactionDetails(
                                            UUID.randomUUID(),

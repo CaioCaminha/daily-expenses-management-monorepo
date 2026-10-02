@@ -1,5 +1,6 @@
 package com.caiocaminha.expensesmanager.core.application;
 
+import com.caminha.javadailyexpenses.KafkaOutboxModuleConfiguration;
 import com.caminha.kafkautils.KafkaConfig;
 import com.caminha.postgresutils.utils.config.R2DBCConfiguration;
 import org.springframework.boot.SpringApplication;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcTransactionManagerAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(exclude = {
@@ -17,9 +19,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @Import(
         {
                 KafkaConfig.class,
-                R2DBCConfiguration.class
+                R2DBCConfiguration.class,
+                KafkaOutboxModuleConfiguration.class,
         }
 )
+@EnableR2dbcRepositories
 @EnableAsync
 public class ExpensesManagerApplication {
 

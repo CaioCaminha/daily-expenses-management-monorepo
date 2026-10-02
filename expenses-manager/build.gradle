@@ -36,6 +36,7 @@ dependencies {
 
 	implementation project(':postgres-utils')
 	implementation project(':kafka-utils')
+	implementation project(':kafka-outbox')
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'

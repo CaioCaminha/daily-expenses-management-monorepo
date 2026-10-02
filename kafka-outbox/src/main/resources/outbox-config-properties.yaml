@@ -1,0 +1,21 @@
+outbox:
+  trigger:
+    topic: outbox-trigger
+  consumer:
+    topic: outbox-consumer
+    concurrency: 3
+  config:
+    topics:
+      transactionUpdatesTopic:
+        name: internal-transaction-updates
+        supportedTypes:
+          - CREATE_TRANSACTION
+          - TRANSACTION_CREATED
+          - SET_CATEGORY
+      testTopic:
+        name: outbox-test
+        supportedTypes:
+          - OUTBOX_TEST
+      outboxTriggerTopic:
+        name: outbox-trigger
+

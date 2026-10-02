@@ -1,2 +1,6 @@
 services:
-  
+  outbox-trigger:
+    image: outbox-trigger:latest
+    environment:
+      - KAFKA_BOOTSTRAP_SERVER=kafka:9092
+      - KAFKA_OUTBOX_TOPIC=outbox-trigger

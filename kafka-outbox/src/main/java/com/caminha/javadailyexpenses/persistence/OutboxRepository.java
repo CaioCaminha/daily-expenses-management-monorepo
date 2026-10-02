@@ -26,4 +26,9 @@ public interface OutboxRepository extends ReactiveCrudRepository<OutboxEntity, U
             """)
     Mono<Void> markAsSent(String id);
 
+    @Query("""
+            UPDATE outbox SET is_duplicate = true where id = :id;
+            """)
+    Mono<Void> markAsDuplicate(String id);
+
 }

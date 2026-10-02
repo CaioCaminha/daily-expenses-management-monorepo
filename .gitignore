@@ -4,5 +4,4 @@
 
 # Ignore Gradle build output directory
 build
-/home/caio-caminha/Documents/projects/daily-expenses-management/redis-utils/docker/volume
 /redis-utils/docker/volume/data/dump.rdb

@@ -1,14 +1,11 @@
 package com.caminha.kafkautils.publisher;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
-import java.util.function.Function;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class KafkaPublisher {
@@ -34,9 +31,12 @@ public class KafkaPublisher {
             String orderingKey,
             String topic
     ){
-        return Mono.fromCallable(() -> objectMapper.writeValueAsString(payload)).flatMap( json ->
-                Mono.fromFuture(() -> kafkaTemplate.send(topic, orderingKey, json))
-        );
+        return Mono.fromCallable(() -> {
+            if(payload instanceof String)
+                return (String) payload;
+            return objectMapper.writeValueAsString(payload);
+        }).flatMap( json -> Mono.fromFuture(() -> kafkaTemplate.send(topic, orderingKey, json)))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
 

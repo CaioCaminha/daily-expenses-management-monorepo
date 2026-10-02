@@ -9,6 +9,8 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.function.Function;
+
 
 @Component
 @Aspect
@@ -32,8 +34,9 @@ public class CustomTransactionalAspect {
      *  If using repeatable read it needs retrying logic because it might throw:
      *      "Could not serialize access due to concurrent update"
      *
-     *
      *  todo how to specify propagation and isolation set on @CustomTransactional annotation on transactionalOperator?
+     *      ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(CustomTransactional.class).isolation();
+     *      ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(CustomTransactional.class).propagation();
      */
     @Around("@annotation(CustomTransactional)")
     public Object withTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -50,6 +53,11 @@ public class CustomTransactionalAspect {
             return ((Flux<?>) result).as(transactionalOperator::transactional);//this wraps the whole reactive pipeline under the same transaction
         }
         return result;
+    }
+
+    // TODO with transaction operator might be helpful for when annotations don't fit well
+    public void withTransaction(Mono<?> publisher) {
+        publisher.as(transactionalOperator::transactional);
     }
 
 }

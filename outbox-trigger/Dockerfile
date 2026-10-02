@@ -1,10 +1,9 @@
 # ---- Build stage ----
-FROM gradle:8.10-jdk21 AS build
+FROM gradle:8.14-jdk21 AS build
 WORKDIR /app
 
 # Cache dependencies separately from source for faster rebuilds
-COPY build.gradle.kts settings.gradle.kts gradle.properties* ./
-COPY gradle ./gradle
+COPY build.gradle.kts settings.gradle.kts* gradle.properties* ./
 RUN gradle dependencies --no-daemon || true
 
 COPY src ./src
