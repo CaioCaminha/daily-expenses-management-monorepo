@@ -121,9 +121,9 @@ public class TransactionHandler {
      *concateMap: Used when each transformation returns another Reactive Stream ( in this case a Flux)
      *  Subscribes to each element in order, ensuring that element 1 is emitted before element 2 starts, ensuring sequential subscription
      *  Useful when it's important to guarantee the order (Alternative Option for flatMap when order is important)
-     *  but if you want to process in parallel and mantain the order can use flatMapSequencial, subscribes in parallel but buffer reorders when emitting
+     *  but if you want to process in parallel and maintain the order can use flatMapSequencial, subscribes in parallel but buffer reorders when emitting
      *
-     *switchOnFirst: Lets you inspect the first signal (Usually the first element emmited by the source Flux)
+     *switchOnFirst: Lets you inspect the first signal (Usually the first element emitted by the source Flux)
      *  before deciding how you are going to consume the rest of the Flux. It's very useful when the way you
      *  process a stream depends on what the first element is. In this case it's useful because we need to decide
      *  if it's an instance of FormPartEvent or FilePartEvent, this checking will decide how we are going to consume
@@ -131,18 +131,13 @@ public class TransactionHandler {
      *
      */
     @CustomTransactional
+    @Deprecated(since = "With Pluggy Integration data will be ingested from /transactions webhook and not from csv files")
     public Mono<ServerResponse> createFromMultipart(ServerRequest request) {
 
         Flux<PartEvent> allPartEvents = request.bodyToFlux(PartEvent.class);
         /**
          * concatMap subscribes to inner publishers sequentially - which is essential for processing File Parts
          *  it's not possible to have interleaving of contents;
-         */
-        /**
-         * Create an abstraction with an interface defining the contract and providers
-         * Should have a provider for serializing data from a CSV file
-         * Should have a provider for serializing data from a PDF file
-         * Should have a provider for serializing data from a Json String
          */
         return ServerResponse.created(URI.create("")).body(
                 allPartEvents.windowUntil(PartEvent::isLast)
@@ -177,8 +172,6 @@ public class TransactionHandler {
         );
     }
 
-    //todo - this needs to be extracted to a strategy, or a provider like structure, we need to support more file types
-    // or the handlers itself needs to be a provider - or could have a provider that supports receiving a Flux<DataBuffer>
     private Flux<TransactionDetails> streamParseCSV(Flux<DataBuffer> contents) {
         return Flux.create(sink -> {
             PipedInputStream inputStream = new PipedInputStream(64 * 1024);
@@ -211,9 +204,6 @@ public class TransactionHandler {
 
                    ResultIterator<Record, ParsingContext> iterator = parser.iterateRecords(reader).iterator();
 
-
-                   //TODO first lines of statement has some additional information - check how to workaround this
-                   //   check how to define how many lines to skip dinamically - config property by financial institution
                    while(iterator.hasNext() && !sink.isCancelled()) {
                        Record record = iterator.next();
                        try {
