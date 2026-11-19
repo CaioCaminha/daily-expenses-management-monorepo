@@ -5,7 +5,12 @@ import com.caiocaminha.expensesmanager.core.application.gateway.r2dbc.repositori
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.Category;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.TransactionDetails;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.TransactionDetailsPort;
+import com.caminha.javadailyexpenses.persistence.OutboxPersistenceProvider;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.stereotype.Service;
@@ -26,16 +31,40 @@ import java.util.UUID;
 public class TransactionDetailsR2DBCGateway implements TransactionDetailsPort {
 
     private final TransactionDetailsRepository transactionDetailsRepository;
-
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final OutboxPersistenceProvider outboxPersistenceProvider;
+    private final ObjectMapper objectMapper;
 
     public TransactionDetailsR2DBCGateway(
             TransactionDetailsRepository repository,
-            R2dbcEntityTemplate r2dbcEntityTemplate
+            R2dbcEntityTemplate r2dbcEntityTemplate,
+            OutboxPersistenceProvider outboxPersistenceProvider,
+            ObjectMapper objectMapper
     ) {
         this.transactionDetailsRepository = repository;
         this.r2dbcEntityTemplate = r2dbcEntityTemplate;
+        this.outboxPersistenceProvider = outboxPersistenceProvider;
+        this.objectMapper = objectMapper;
     }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void outboxTest() {
+        var data = new OutboxTestDto(
+                "OUTBOX_TEST",
+                "outbox test"
+        );
+
+        try {
+            log.info("Publishing OutboxTest event");
+            outboxPersistenceProvider.save(
+                    data,
+                    OutboxTestDto::type
+            ).subscribe(outboxEvent -> log.info("Saved into outbox {}", outboxEvent.orderingKey()));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public Flux<TransactionDetails> findByUserId(UUID userId) {
@@ -56,7 +85,6 @@ public class TransactionDetailsR2DBCGateway implements TransactionDetailsPort {
                 .toFormatter();
 
         log.info("starting to save into database");
-        log.info("description: %s | cost: %s | transactionDate: %s".formatted(transactionDetails.details(), transactionDetails.cost(), transactionDetails.transactionDate()));
         return r2dbcEntityTemplate.getDatabaseClient().sql(
                 """  
                 INSERT INTO transaction_details (id, user_id, details, category, cost, date_executed, paid_by, created_at, updated_at)
@@ -77,23 +105,19 @@ public class TransactionDetailsR2DBCGateway implements TransactionDetailsPort {
                 .bind("cost", transactionDetails.cost())
                 .bind("dateExecuted", transactionDetails.transactionDate())
                 .bind("paidBy", transactionDetails.paidBy())
-                .bind("createdAt", transactionDetails.createdAt()) //TODO continue binding
+                .bind("createdAt", transactionDetails.createdAt())
                 .bind("updatedAt", transactionDetails.updatedAt())
-                .map((row, metadata) -> {
-                    log.info("building TransactionDetails from RowSpec");
-                    log.info("building new transactionDetailsDto from CSV description: %s | cost: %s | transactionDate: %s".formatted(row.get("created_at", String.class),row.get("updated_at", String.class), LocalDate.parse(Objects.requireNonNull(row.get("date_executed", String.class)))));
-                    return new TransactionDetails(
-                            UUID.fromString(Objects.requireNonNull(row.get("id", String.class))),
-                            UUID.fromString(Objects.requireNonNull(row.get("user_id", String.class))),
-                            Category.valueOf(row.get("category", String.class)),
-                            row.get("details", String.class),
-                            row.get("cost", Double.class),
-                            LocalDate.parse(Objects.requireNonNull(row.get("date_executed", String.class))),
-                            row.get("paid_by", String.class),
-                            LocalDateTime.parse(Objects.requireNonNull(row.get("created_at", String.class)), formatter),
-                            LocalDateTime.parse(Objects.requireNonNull(row.get("updated_at", String.class)), formatter)
-                    );
-                }).one();
+                .map((row, metadata) -> new TransactionDetails(
+                        UUID.fromString(Objects.requireNonNull(row.get("id", String.class))),
+                        UUID.fromString(Objects.requireNonNull(row.get("user_id", String.class))),
+                        Category.valueOf(row.get("category", String.class)),
+                        row.get("details", String.class),
+                        row.get("cost", Double.class),
+                        LocalDate.parse(Objects.requireNonNull(row.get("date_executed", String.class))),
+                        row.get("paid_by", String.class),
+                        LocalDateTime.parse(Objects.requireNonNull(row.get("created_at", String.class)), formatter),
+                        LocalDateTime.parse(Objects.requireNonNull(row.get("updated_at", String.class)), formatter)
+                )).one();
     }
 
     private String retrievePropertyNameThroughReflection(

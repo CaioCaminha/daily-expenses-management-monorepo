@@ -1,0 +1,6 @@
+spring:
+  config:
+    import:
+      - kafka-topics.yaml
+  application:
+    name: kafka-utils

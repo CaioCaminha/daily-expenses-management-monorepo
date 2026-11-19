@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'java-library'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -21,11 +22,16 @@ repositories {
 
 dependencies {
     // PostgreSQL Dependencies
-    implementation 'org.springframework.data:spring-data-r2dbc'
+    api 'org.springframework.data:spring-data-r2dbc'
     implementation 'org.postgresql:postgresql'
-    implementation 'org.postgresql:r2dbc-postgresql'
+    api 'org.postgresql:r2dbc-postgresql'
     implementation 'io.r2dbc:r2dbc-pool'
 
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // This automatically enables AOP on the project
+    // No need to use @EnableAspectJAutoProxy anymore
+    implementation 'org.springframework.boot:spring-boot-starter-aop:3.5.6'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'

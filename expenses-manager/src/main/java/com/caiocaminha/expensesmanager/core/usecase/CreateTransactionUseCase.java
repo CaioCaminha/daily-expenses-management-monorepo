@@ -27,15 +27,7 @@ public class CreateTransactionUseCase {
         // problem with that: If I buy on the same location, at the same day, with the same cost - it would fail to insert
         // this affects data consistency, since it would not insert this "duplicated" field
 
-        //TODO think on a way of properly checking unicity
-
-
-
-        //TODO finish CreateTransactionUseCase / createFromMultipart  handler
-        //  Next step is to document process of creating a handlerFunction that supports receiving MultipartData from ServerRequest
-        // document internally the process of creating createFromMultipart handler function
-        // document on medium a how-to article of how to consume a multipartfile from an WebFlux.fn HandlerFunction
-        //     consuming a Flux<DataBuffer> using PipedInputStreams and PipedOutputStreams
+        //TODO MUST TAKE INTO ACCOUNT THE BALANCE - IF THE BALANCE IS UNCHANGED, IT'S A DUPLICATE, OTHERWISE IS A VALID TRANSACTION
 
 
         transactionDetails.internalHashCode();

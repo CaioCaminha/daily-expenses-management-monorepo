@@ -1,8 +1,8 @@
 package com.caiocaminha.expensesmanager.core.application.gateway.r2dbc.entities;
 
-import com.caiocaminha.expensesmanager.core.application.gateway.r2dbc.utils.PersistableEntity;
 import com.caiocaminha.expensesmanager.core.domain.user.UserDetails;
 import com.caiocaminha.expensesmanager.core.domain.user.UserDetailsRequest;
+import com.caminha.postgresutils.utils.utils.persistence.PersistableEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;

@@ -1,8 +1,8 @@
 package com.caiocaminha.expensesmanager.core.application.gateway.r2dbc.entities;
 
-import com.caiocaminha.expensesmanager.core.application.gateway.r2dbc.utils.PersistableEntity;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.TransactionDetails;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.Category;
+import com.caminha.postgresutils.utils.utils.persistence.PersistableEntity;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

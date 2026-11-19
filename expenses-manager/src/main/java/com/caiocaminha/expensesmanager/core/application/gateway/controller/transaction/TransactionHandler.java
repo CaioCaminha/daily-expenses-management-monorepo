@@ -1,7 +1,7 @@
 package com.caiocaminha.expensesmanager.core.application.gateway.controller.transaction;
 
 import com.caiocaminha.expensesmanager.core.application.gateway.controller.transaction.dto.TransactionDetailsDto;
-import com.caiocaminha.expensesmanager.core.application.utils.CustomTransactional;
+import com.caminha.postgresutils.utils.utils.transactional.CustomTransactional;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.Category;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.TransactionDetails;
 import com.caiocaminha.expensesmanager.core.domain.transactionDetails.TransactionDetailsPort;
@@ -100,6 +100,7 @@ public class TransactionHandler {
                 );
     }
 
+    @CustomTransactional
     public Mono<ServerResponse> createTransaction(ServerRequest request) {
         return request.bodyToMono(TransactionDetails.class)
                 .flatMap(transactionDetailsPort::upsert)
@@ -120,9 +121,9 @@ public class TransactionHandler {
      *concateMap: Used when each transformation returns another Reactive Stream ( in this case a Flux)
      *  Subscribes to each element in order, ensuring that element 1 is emitted before element 2 starts, ensuring sequential subscription
      *  Useful when it's important to guarantee the order (Alternative Option for flatMap when order is important)
-     *  but if you want to process in parallel and mantain the order can use flatMapSequencial, subscribes in parallel but buffer reorders when emitting
+     *  but if you want to process in parallel and maintain the order can use flatMapSequencial, subscribes in parallel but buffer reorders when emitting
      *
-     *switchOnFirst: Lets you inspect the first signal (Usually the first element emmited by the source Flux)
+     *switchOnFirst: Lets you inspect the first signal (Usually the first element emitted by the source Flux)
      *  before deciding how you are going to consume the rest of the Flux. It's very useful when the way you
      *  process a stream depends on what the first element is. In this case it's useful because we need to decide
      *  if it's an instance of FormPartEvent or FilePartEvent, this checking will decide how we are going to consume
@@ -130,18 +131,13 @@ public class TransactionHandler {
      *
      */
     @CustomTransactional
+    @Deprecated(since = "With Pluggy Integration data will be ingested from /transactions webhook and not from csv files")
     public Mono<ServerResponse> createFromMultipart(ServerRequest request) {
 
         Flux<PartEvent> allPartEvents = request.bodyToFlux(PartEvent.class);
         /**
          * concatMap subscribes to inner publishers sequentially - which is essential for processing File Parts
          *  it's not possible to have interleaving of contents;
-         */
-        /**
-         * Create an abstraction with an interface defining the contract and providers
-         * Should have a provider for serializing data from a CSV file
-         * Should have a provider for serializing data from a PDF file
-         * Should have a provider for serializing data from a Json String
          */
         return ServerResponse.created(URI.create("")).body(
                 allPartEvents.windowUntil(PartEvent::isLast)
@@ -155,8 +151,11 @@ public class TransactionHandler {
                                     Flux<DataBuffer> contents = partEvents.map(PartEvent::content);
 
                                     return streamParseCSV(contents)
-                                            .buffer(500) //todo check if this is a proper value for buffering
+                                            .buffer(100) //todo check if this is a proper value for buffering
                                             .flatMap( transactions ->
+                                                    //todo caio - This logic will be updated to publish CREATE_TRANSACTION instead of calling transactionDetails port
+                                                    // it should instead, call a usecase that would save CREATE_TRANSACTION to outbox table and then the consumer would be responsible
+                                                    // for saving on transaction_details table and other operations
                                                     Flux.fromStream(transactions.stream().map(transactionDetailsPort::upsert))
                                             ).flatMap(Function.identity());
                                 }
@@ -173,8 +172,6 @@ public class TransactionHandler {
         );
     }
 
-    //todo - this needs to be extracted to a strategy, or a provider like structure, we need to support more file types
-    // or the handlers itself needs to be a provider - or could have a provider that supports receiving a Flux<DataBuffer>
     private Flux<TransactionDetails> streamParseCSV(Flux<DataBuffer> contents) {
         return Flux.create(sink -> {
             PipedInputStream inputStream = new PipedInputStream(64 * 1024);
@@ -207,14 +204,9 @@ public class TransactionHandler {
 
                    ResultIterator<Record, ParsingContext> iterator = parser.iterateRecords(reader).iterator();
 
-
-                   //TODO first lines of statement has some additional information - check how to workaround this
                    while(iterator.hasNext() && !sink.isCancelled()) {
                        Record record = iterator.next();
                        try {
-                           System.out.println("caio - start from here");
-//                           System.out.println(record);
-                           System.out.println(record.toIndexMap());
                            var transactionDetailsDto = TransactionDetailsDto.of(
                                    record.getString(DESCRIPTION_INDEX),
                                    record.getString(HISTORY_INDEX),
@@ -223,7 +215,13 @@ public class TransactionHandler {
                                    record.getString(BALANCE_INDEX)
                            );
 
-                           log.info("building new transactionDetailsDto from CSV description: %s | cost: %s | transactionDate: %s".formatted(transactionDetailsDto.getDescription(), transactionDetailsDto.getCost(), transactionDetailsDto.getTransactionDate()));
+                           log.info(
+                                   "building new transactionDetailsDto from CSV description: {} | cost: {} | transactionDate: {}",
+                                   transactionDetailsDto.getDescription(),
+                                   transactionDetailsDto.getCost(),
+                                   transactionDetailsDto.getTransactionDate()
+                           );
+
                            sink.next(
                                    new TransactionDetails(
                                            UUID.randomUUID(),
