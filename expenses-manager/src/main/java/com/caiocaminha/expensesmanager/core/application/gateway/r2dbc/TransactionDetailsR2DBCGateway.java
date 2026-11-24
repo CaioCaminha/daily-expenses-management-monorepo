@@ -48,6 +48,7 @@ public class TransactionDetailsR2DBCGateway implements TransactionDetailsPort {
     }
 
     @EventListener(ApplicationReadyEvent.class)
+    @Deprecated(since = "Was added for testing purpose only")
     public void outboxTest() {
         var data = new OutboxTestDto(
                 "OUTBOX_TEST",

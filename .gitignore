@@ -1,7 +1,7 @@
 # Ignore Gradle project-specific cache directory
 .gradle
 .rdb
-
+.idea
 # Ignore Gradle build output directory
 build
 /redis-utils/docker/volume/data/dump.rdb
