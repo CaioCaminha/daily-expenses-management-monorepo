@@ -12,13 +12,12 @@ pluginManagement {
 rootProject.name = 'daily-expenses-management'
 
 
-include('expenses-manager')
 include 'daily-expenses-management-conventions'
-include 'kafka-utils'
-include 'postgres-utils'
+include 'utils:kafka-utils'
+include 'utils:postgres-utils'
+include 'utils:json-utils'
+include 'utils:kafka-outbox'
+include 'utils:redis-utils'
 
-include 'expenses-manager'
-include 'json-utils'
-include 'kafka-outbox'
-include 'outbox-trigger'
-include 'redis-utils'
+include 'services:outbox-trigger'
+include 'services:expenses-manager'
