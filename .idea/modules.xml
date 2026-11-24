@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expenses-manager/daily-expenses-management.expenses-manager.main.iml" filepath="$PROJECT_DIR$/.idea/modules/expenses-manager/daily-expenses-management.expenses-manager.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-outbox/daily-expenses-management.kafka-outbox.main.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-outbox/daily-expenses-management.kafka-outbox.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-utils/daily-expenses-management.kafka-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-utils/daily-expenses-management.kafka-utils.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/postgres-utils/daily-expenses-management.postgres-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/postgres-utils/daily-expenses-management.postgres-utils.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/redis-utils/daily-expenses-management.redis-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/redis-utils/daily-expenses-management.redis-utils.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/expenses-manager/daily-expenses-management.services.expenses-manager.main.iml" filepath="$PROJECT_DIR$/.idea/modules/services/expenses-manager/daily-expenses-management.services.expenses-manager.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/utils/kafka-outbox/daily-expenses-management.utils.kafka-outbox.main.iml" filepath="$PROJECT_DIR$/.idea/modules/utils/kafka-outbox/daily-expenses-management.utils.kafka-outbox.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/utils/kafka-utils/daily-expenses-management.utils.kafka-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/utils/kafka-utils/daily-expenses-management.utils.kafka-utils.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/utils/postgres-utils/daily-expenses-management.utils.postgres-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/utils/postgres-utils/daily-expenses-management.utils.postgres-utils.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/utils/redis-utils/daily-expenses-management.utils.redis-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/utils/redis-utils/daily-expenses-management.utils.redis-utils.main.iml" />
     </modules>
   </component>
 </project>
