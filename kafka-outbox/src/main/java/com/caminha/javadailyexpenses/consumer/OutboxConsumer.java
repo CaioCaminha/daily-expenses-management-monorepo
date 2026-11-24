@@ -37,7 +37,12 @@ public class OutboxConsumer {
     }
 
     private Mono<Void> publishUnpublishedMessages(String orderingKey) {
-       return outboxPersistenceProvider.findUnpublishedMessagesByOrderingKey(orderingKey)
+        /**
+         * TODO - Sequential delivery is only required for orderingKeys within the same topic
+         *  this should group by orderingKey and topic so process for different topics concurrently
+         */
+        return outboxPersistenceProvider.findUnpublishedMessagesByOrderingKey(orderingKey)
+//               .groupBy(OutboxEvent::topicName) - this for example
                 .concatMap(outboxEvent -> {
                     log.info("Found unpublished event {}", outboxEvent.id());
                     return kafkaPublisher.publishMessage(
